@@ -543,6 +543,18 @@ int main()
             std::cerr << e.base().what() << std::endl;
             testOutput(false, "ORM mapper asynchronous interface(1)");
         });
+    mapper.findBy(
+        Criteria(Users::Cols::_id,
+                 CompareOperator::IN,
+                 std::vector<int32_t>{10, 200}),
+        [](std::vector<Users> users) {
+            testOutput(users.size() == 1,
+                       "ORM mapper asynchronous interface(2)");
+        },
+        [](const DrogonDbException &e) {
+            std::cerr << e.base().what() << std::endl;
+            testOutput(false, "ORM mapper asynchronous interface(2)");
+        });
     globalf.get();
     sleep(1);
     return 0;
